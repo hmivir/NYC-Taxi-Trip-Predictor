@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  notebook:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    environment:
+      - JUPYTER_TOKEN=taxi  # Simple token for development
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - MODEL_PATH=/app/models/latest
+    depends_on:
+      - notebook 

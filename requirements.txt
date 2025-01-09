@@ -1,0 +1,17 @@
+numpy
+pandas
+scikit-learn
+jupyter
+notebook
+matplotlib
+seaborn
+requests
+pyarrow
+fastparquet
+tqdm
+fastapi
+uvicorn
+pydantic
+torch
+torchvision
+tensorflow
