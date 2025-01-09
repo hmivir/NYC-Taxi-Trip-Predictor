@@ -8,7 +8,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - JUPYTER_TOKEN=taxi  # Simple token for development
+      - JUPYTER_TOKEN=taxi
 
   api:
     build: .
@@ -21,3 +21,16 @@ services:
       - MODEL_PATH=/app/models/latest
     depends_on:
       - notebook 
+
+  data:
+    build: 
+      context: ./data
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["python", "data/download_data.py", "--years", "2022,2023,2024"]
+
+  # volumes:
+  #   nyc_taxi_data:
+  #     name: nyc_taxi_data 

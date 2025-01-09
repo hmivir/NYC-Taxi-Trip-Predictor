@@ -13,5 +13,4 @@ fastapi
 uvicorn
 pydantic
 torch
-torchvision
 tensorflow

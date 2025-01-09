@@ -3,10 +3,11 @@ import requests
 from pathlib import Path
 from tqdm import tqdm
 import concurrent.futures
+import argparse
 
 # Create data directories if they don't exist
-RAW_DATA_DIR = Path('data/raw')
-PROCESSED_DATA_DIR = Path('data/processed')
+RAW_DATA_DIR = Path('/app/data/raw')
+PROCESSED_DATA_DIR = Path('/app/data/processed')
 RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -44,17 +45,25 @@ def download_taxi_data(year, month, taxi_type='yellow'):
     return False
 
 def main():
-    # Download recent yellow taxi data (last 2 years)
-    years = [2022, 2023, 2024]
+    parser = argparse.ArgumentParser(description='Download NYC Taxi Trip data')
+    parser.add_argument('--years', type=str, default='2022,2023,2024',
+                       help='Comma-separated list of years to download (default: 2022,2023,2024)')
+    parser.add_argument('--taxi-type', type=str, default='yellow',
+                       help='Type of taxi data to download (default: yellow)')
+    args = parser.parse_args()
+
+    # Parse years from command line
+    years = [int(year.strip()) for year in args.years.split(',')]
+    
     months = range(1, 13)
     
-    print("Downloading yellow taxi data...")
+    print(f"Downloading {args.taxi_type} taxi data for years: {years}...")
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = []
         for year in years:
             for month in months:
                 futures.append(
-                    executor.submit(download_taxi_data, year, month, 'yellow')
+                    executor.submit(download_taxi_data, year, month, args.taxi_type)
                 )
         
         for future in concurrent.futures.as_completed(futures):

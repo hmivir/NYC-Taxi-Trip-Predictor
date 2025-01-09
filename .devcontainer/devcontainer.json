@@ -1,0 +1,29 @@
+{
+    "name": "NYC Taxi Predictor",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "notebook",  // Using the notebook service as our dev container
+    "workspaceFolder": "/app",
+    
+    // Configure tool-specific properties
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.linting.enabled": true,
+                "python.formatting.provider": "black"
+            }
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [8888, 8000],
+
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "pip install -r requirements.txt"
+} 
