@@ -48,3 +48,5 @@ nyc-venv2
 .docker/ 
 
 .DS_Store
+
+.streamlit/secrets.toml
