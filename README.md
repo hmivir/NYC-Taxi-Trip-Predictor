@@ -1,14 +1,56 @@
-# NYC Taxi Trip Predictor
+## NYC Taxi Trip Predictor
+A full-stack machine learning system to predict taxi fare price and trip duration in New York City using historical trip data.
 
-A machine learning system that predicts taxi trip duration and costs in New York City using historical taxi trip data from the NYC Taxi & Limousine Commission.
+Built to empower riders and drivers with real-time insights for smarter, cost-effective travel.
 
-## Features
+## 🚀 Motivation
+**For riders:**
 
-- Data pipeline for processing NYC taxi trip records
-- Machine learning models for predicting trip duration and cost
-- REST API for real-time predictions
-- Interactive Jupyter notebooks for data exploration
-- Docker support for easy deployment
+Transparent pricing before the trip starts
+Better planning and time management
+
+**For drivers:**
+
+Optimized routing and pricing strategies
+Customer behavior insights
+
+## 🎯 Project Objective
+**Develop a real-time predictive model for:**
+
+🕒 Trip duration (in seconds)
+💵 Fare amount (USD)
+
+**Using features available at the start of the trip:**
+Pickup & dropoff location
+Distance
+Date & time
+Passenger count
+Rate type (e.g., airport rate)
+
+## 🧠 Key Features
+🔄 Automated data pipeline (raw to clean)
+📊 Exploratory Data Analysis (Jupyter)
+⚙️ ML Models: XGBoost, RandomForest, Linear Regression
+🌐 REST API using FastAPI
+🐳 Fully containerized with Docker
+🧪 Testing scripts and modularized code
+📍 Optional: Neighborhood and demand mapping
+
+## 📦 Dataset Overview
+
+Source: NYC Taxi and Limousine Commission Open Data [2018–2025]
+Used sample: ~3.5 million rows from May 2022
+Key columns:
+    pickup_datetime, dropoff_datetime
+    trip_distance, fare_amount
+    payment_type, passenger_count
+
+## 🔧 Data issues and solutions
+Issue	Solution
+Missing values	Cleaning & filtering
+Temporal inconsistencies	Timestamp validation
+Location IDs only (no lat/lon)	Used GeoJSON with neighborhood polygons
+Sparse location data	Dropped or grouped into broader zones
 
 ## Project Structure
 ```
@@ -49,97 +91,60 @@ nyc-taxi-predictor/
     └── __init__.py 
 ```
 
-## Data Source
+## 🔍 EDA Highlights
+Temporal patterns: fare and duration vary by hour/day
+Trip distribution visualized with heatmaps (pickup/dropoff)
+Feature engineering: rush hour, weekend flag, rate codes, zones
+Correlation analysis between distance and fare/duration
 
-This project uses the [NYC Taxi Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) provided by the NYC Taxi & Limousine Commission (TLC).
+## 🧪 Model Training & Evaluation
+| Target        | Best Model        | MAE       | Notes                         |
+| ------------- | ----------------- | --------- | ----------------------------- |
+| Trip Duration | XGBoost           | \~230 sec | Good on outliers              |
+| Fare Amount   | Linear Regression | \~\$1.97  | Simple, robust, interpretable |
 
-## Installation
 
-### Local Installation
+Trained on May 2022 sample for faster iteration
+80/20 train-test split
+Optional grid search & XGBoost tuning
 
-1. Create and activate a Python virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+## 📡 API Usage
+**Once Docker is running:**
+    Main URL: http://localhost:8000
+    Docs (Swagger): http://localhost:8000/docs
+    Health check: http://localhost:8000/health
+    Jupyter: http://localhost:8888 (token: taxi)
 
-2. Install required packages:
-```bash
-pip install -r requirements.txt
-```
-
-3. Download the initial dataset:
-```bash
-python data/download_data.py
-```
-
-### Using Docker
-
-There are two ways to use Docker with this project:
-
-#### Option 1: VS Code Remote Containers
-
-1. Install the "Remote Development" extension in VS Code
-2. Open the project in VS Code
-3. When prompted, click "Reopen in Container" or press F1 and select "Remote-Containers: Reopen in Container"
-4. VS Code will build the container and set up the development environment
-
-#### Option 2: Docker Compose
-
-1. Start all services:
-```bash
+## 🐳 Run with Docker
+**Run entire system**
 docker-compose up --build
-```
 
-2. Or start specific services:
-```bash
-# Run Jupyter Notebook
+**Run specific service**
+docker-compose up api
 docker-compose up notebook
 
-# Run the API
-docker-compose up api
+## 🚧 Challenges
+Irregularities and outliers in trip data
+Geolocation mapping via neighborhood zones
+Data volume → required downsampling for local modeling
+Prediction drift for extreme cases (long trips, heavy traffic)
 
-# Download data
-docker-compose run data
+## 🔭 Next Steps
+🌦 Add weather and traffic data (e.g., OpenWeather API)
+📈 Expand to predict taxi demand by region and hour
+☁️ Deploy on cloud (GCP/AWS)
+📱 Build interactive dashboard with Streamlit
 
-# Download specific years
-docker-compose run data --years 2023,2024
-```
 
-### Accessing Services
+## 👨‍💻 About the Author
+**Héctor Maximiliano Ivir**
+PhD in Biochemistry · Machine Learning Engineer · Data Science in Biotech
+https://www.linkedin.com/in/hmivir/
 
-#### Jupyter Notebook
-- URL: http://localhost:8888
-- Token: taxi
-
-#### API
-- Main URL: http://localhost:8000
-- Documentation: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
-
-### Development Workflow
-
-When using Docker:
-- All project files are mounted in the container
-- Changes to files are immediately reflected
-- Data downloaded through Docker is available in the `data/` directory
-- Jupyter notebooks can be created and edited from the browser
-
-### Stopping Services
-
-```bash
-# Stop all services
-docker-compose down
-
-# Stop a specific service
-docker-compose stop notebook
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b new_function`)
-3. Commit your changes (`git commit -m 'Add amazing feature with new function'`)
-4. Push to the branch (`git push origin new_function`)
-5. Open a Pull Request
-
+## 🤝 Contributions Welcome
+Want to extend this project for your city or use case?
+Fork the repo
+Create a new branch: git checkout -b feature/name
+Commit your changes: git commit -m "Add feature"
+Push: git push origin feature/name
+Open a Pull Request 🚀
